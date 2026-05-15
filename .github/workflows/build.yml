@@ -1,0 +1,34 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Lint and package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install web-ext
+        run: npm install --global web-ext
+
+      - name: Lint
+        run: web-ext lint --source-dir=. --warnings-as-errors=false
+
+      - name: Build
+        run: web-ext build --source-dir=. --artifacts-dir=./web-ext-artifacts --overwrite-dest
+
+      - name: Upload XPI
+        uses: actions/upload-artifact@v4
+        with:
+          name: llm-chat-bot-router-xpi
+          path: web-ext-artifacts/*.zip
+          if-no-files-found: error
