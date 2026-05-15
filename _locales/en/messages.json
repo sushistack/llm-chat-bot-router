@@ -1,0 +1,10 @@
+{
+  "extensionName": {
+    "message": "LLM Chat Bot Router",
+    "description": "Name of the extension shown in the toolbar and about:addons."
+  },
+  "extensionDescription": {
+    "message": "Custom Firefox sidebar that hosts multiple AI chat sites as switchable iframes.",
+    "description": "Short description shown in the extensions list."
+  }
+}
