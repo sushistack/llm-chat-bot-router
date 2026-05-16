@@ -15,8 +15,7 @@
         "claude.ai",
         "grok.com",
         "gemini.google.com",
-        "chatgpt.com",
-        "perplexity.ai"
+        "chatgpt.com"
       ],
       "resourceTypes": ["sub_frame"]
     }

@@ -3,8 +3,7 @@ export const DEFAULT_TABS = [
   { id: "claude",   label: "Claude",   url: "https://claude.ai",         icon: "icons/sites/claude.png",   enabled: true },
   { id: "grok",     label: "Grok",     url: "https://grok.com",          icon: "icons/sites/grok.png",     enabled: true },
   { id: "gemini",   label: "Gemini",   url: "https://gemini.google.com", icon: "icons/sites/gemini.png",   enabled: true },
-  { id: "chatgpt",  label: "ChatGPT",  url: "https://chatgpt.com",       icon: "icons/sites/chatgpt.png",  enabled: true },
-  { id: "perplexity", label: "Perplexity", url: "https://www.perplexity.ai", icon: "icons/sites/perplexity.png", enabled: true }
+  { id: "chatgpt",  label: "ChatGPT",  url: "https://chatgpt.com",       icon: "icons/sites/chatgpt.png",  enabled: true }
 ];
 
 export function faviconFor(tab) {
