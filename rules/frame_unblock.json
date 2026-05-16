@@ -13,8 +13,10 @@
       "requestDomains": [
         "chat.deepseek.com",
         "claude.ai",
+        "grok.com",
         "gemini.google.com",
-        "chatgpt.com"
+        "chatgpt.com",
+        "www.perplexity.ai"
       ],
       "resourceTypes": ["sub_frame"]
     }
