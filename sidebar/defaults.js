@@ -1,9 +1,9 @@
 export const DEFAULT_TABS = [
-  { id: "deepseek", label: "DeepSeek", url: "https://chat.deepseek.com", icon: "icons/sites/deepseek.png", enabled: true },
   { id: "claude",   label: "Claude",   url: "https://claude.ai",         icon: "icons/sites/claude.png",   enabled: true },
-  { id: "grok",     label: "Grok",     url: "https://grok.com",          icon: "icons/sites/grok.png",     enabled: true },
+  { id: "deepseek", label: "DeepSeek", url: "https://chat.deepseek.com", icon: "icons/sites/deepseek.png", enabled: true },
   { id: "gemini",   label: "Gemini",   url: "https://gemini.google.com", icon: "icons/sites/gemini.png",   enabled: true },
-  { id: "chatgpt",  label: "ChatGPT",  url: "https://chatgpt.com",       icon: "icons/sites/chatgpt.png",  enabled: true }
+  { id: "grok",     label: "Grok",     url: "https://grok.com",          icon: "icons/sites/grok.png",     enabled: true },
+  { id: "chatgpt",  label: "GPT",      url: "https://chatgpt.com",       icon: "icons/sites/chatgpt.png",  enabled: true }
 ];
 
 export function faviconFor(tab) {
