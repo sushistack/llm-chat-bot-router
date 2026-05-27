@@ -29,7 +29,7 @@ function faviconUrlFor(tab) {
   style.textContent = `
     #llm-router-strip {
       position: fixed;
-      top: 0;
+      top: -40px;
       left: 0;
       right: 0;
       height: 40px;
@@ -114,10 +114,10 @@ function faviconUrlFor(tab) {
 
   document.body.insertBefore(strip, document.body.firstChild);
 
-  // Push page content below the fixed strip
-  document.documentElement.style.scrollPaddingTop = "40px";
-  document.body.style.paddingTop = "40px";
-  document.body.style.boxSizing = "border-box";
+  // Shift the entire body (including its own fixed-position children like
+  // site headers) down by 40px so nothing hides behind our strip.
+  // Our strip uses top:-40px to counteract this shift and stay at viewport top.
+  document.body.style.transform = "translateY(40px)";
 
   strip.addEventListener("wheel", (e) => {
     if (e.deltaY === 0) return;
