@@ -113,7 +113,11 @@ function faviconUrlFor(tab) {
   }
 
   document.body.insertBefore(strip, document.body.firstChild);
+
+  // Push page content below the fixed strip
+  document.documentElement.style.scrollPaddingTop = "40px";
   document.body.style.paddingTop = "40px";
+  document.body.style.boxSizing = "border-box";
 
   strip.addEventListener("wheel", (e) => {
     if (e.deltaY === 0) return;
