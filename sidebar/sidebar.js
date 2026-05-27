@@ -2,11 +2,9 @@ import { DEFAULT_TABS, faviconFor } from "./defaults.js";
 
 const STORAGE_KEYS = ["tabs", "activeTabId", "firstRun"];
 const stripEl = document.getElementById("tab-strip");
-const stackEl = document.getElementById("frame-stack");
 const emptyEl = document.getElementById("empty-state");
 
 let state = { tabs: [], activeTabId: null };
-const mountedFrames = new Map();
 
 function migrateStoredTabs(tabs) {
   const defaults = new Map(DEFAULT_TABS.map(t => [t.id, t]));
@@ -45,11 +43,9 @@ function renderStrip() {
   const enabled = state.tabs.filter(t => t.enabled !== false);
   if (enabled.length === 0) {
     emptyEl.hidden = false;
-    stackEl.hidden = true;
     return;
   }
   emptyEl.hidden = true;
-  stackEl.hidden = false;
   for (const tab of enabled) {
     const btn = document.createElement("button");
     btn.type = "button";
@@ -76,58 +72,9 @@ function renderStrip() {
   }
 }
 
-function pruneFrames() {
-  const validIds = new Set(state.tabs.filter(t => t.enabled !== false).map(t => t.id));
-  for (const [id, host] of mountedFrames) {
-    if (!validIds.has(id)) {
-      host.remove();
-      mountedFrames.delete(id);
-    }
-  }
-}
-
-const LOAD_TIMEOUT_MS = 5000;
-
-function ensureFrame(tab) {
-  let host = mountedFrames.get(tab.id);
-  if (host) return host;
-  host = document.createElement("div");
-  host.className = "frame-host";
-  host.dataset.tabId = tab.id;
-  host.hidden = true;
-
-  const iframe = document.createElement("iframe");
-  iframe.referrerPolicy = "no-referrer";
-
-  const fallback = document.createElement("div");
-  fallback.className = "frame-fallback";
-  fallback.hidden = true;
-  const msg = document.createElement("p");
-  msg.textContent = "This site did not load inside the sidebar.";
-  const link = document.createElement("a");
-  link.href = tab.url;
-  link.target = "_blank";
-  link.rel = "noopener noreferrer";
-  link.textContent = "Open in new tab →";
-  fallback.append(msg, link);
-
-  const timer = setTimeout(() => { fallback.hidden = false; }, LOAD_TIMEOUT_MS);
-  iframe.addEventListener("load", () => clearTimeout(timer), { once: true });
-
-  iframe.src = tab.url;
-  host.append(iframe, fallback);
-  stackEl.appendChild(host);
-  mountedFrames.set(tab.id, host);
-  return host;
-}
-
 async function activateTab(id) {
   const tab = state.tabs.find(t => t.id === id && t.enabled !== false);
   if (!tab) return;
-  ensureFrame(tab);
-  for (const [hostId, host] of mountedFrames) {
-    host.hidden = hostId !== id;
-  }
   for (const btn of stripEl.querySelectorAll("button")) {
     btn.setAttribute("aria-selected", String(btn.dataset.tabId === id));
   }
@@ -135,6 +82,7 @@ async function activateTab(id) {
     state.activeTabId = id;
     await browser.storage.local.set({ activeTabId: id });
   }
+  browser.sidebarAction.setPanel({ panel: tab.url });
 }
 
 function resolveInitialActive() {
@@ -147,7 +95,6 @@ function resolveInitialActive() {
 async function bootstrap() {
   state = await loadState();
   renderStrip();
-  pruneFrames();
   const initial = resolveInitialActive();
   if (initial) await activateTab(initial);
 }
@@ -158,7 +105,6 @@ browser.storage.onChanged.addListener((changes, area) => {
   if ("tabs" in changes) state.tabs = Array.isArray(changes.tabs.newValue) ? changes.tabs.newValue : [];
   if ("activeTabId" in changes) state.activeTabId = changes.activeTabId.newValue ?? null;
   renderStrip();
-  pruneFrames();
   const initial = resolveInitialActive();
   if (initial) activateTab(initial);
 });
