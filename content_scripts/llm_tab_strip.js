@@ -29,7 +29,7 @@ function faviconUrlFor(tab) {
   style.textContent = `
     #llm-router-strip {
       position: fixed;
-      top: -40px;
+      top: 0;
       left: 0;
       right: 0;
       height: 40px;
@@ -112,12 +112,28 @@ function faviconUrlFor(tab) {
     strip.appendChild(btn);
   }
 
-  document.body.insertBefore(strip, document.body.firstChild);
+  // Insert strip into <html> (not <body>) so that body's overflow:hidden
+  // cannot clip it. position:fixed on an element outside <body> is still
+  // relative to the viewport in Firefox.
+  document.documentElement.insertBefore(strip, document.body);
 
-  // Shift the entire body (including its own fixed-position children like
-  // site headers) down by 40px so nothing hides behind our strip.
-  // Our strip uses top:-40px to counteract this shift and stay at viewport top.
-  document.body.style.transform = "translateY(40px)";
+  // Defer body transform to let the page complete its initial synchronous
+  // layout (critical for SPAs like DeepSeek that measure the viewport on
+  // first render). After transform, fire a resize event so ResizeObserver-
+  // based layouts re-calculate against the new dimensions.
+  setTimeout(() => {
+    const bodyStyle = document.createElement("style");
+    bodyStyle.textContent = `
+      body {
+        transform: translateY(40px) !important;
+        height: calc(100vh - 40px) !important;
+        min-height: 0 !important;
+        overflow: hidden !important;
+      }
+    `;
+    document.head.appendChild(bodyStyle);
+    window.dispatchEvent(new Event("resize"));
+  }, 0);
 
   strip.addEventListener("wheel", (e) => {
     if (e.deltaY === 0) return;
