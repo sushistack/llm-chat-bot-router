@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "__MSG_extensionName__",
   "description": "__MSG_extensionDescription__",
-  "version": "0.2.10",
+  "version": "0.3.0",
   "default_locale": "en",
   "background": {
     "service_worker": "background.js",
@@ -44,29 +44,34 @@
       "js": ["content_scripts/llm_tab_strip.js"],
       "run_at": "document_end",
       "all_frames": false
+    },
+    {
+      "matches": ["https://claude.ai/*"],
+      "js": ["content_scripts/claude_frame_spoof.js"],
+      "run_at": "document_start",
+      "all_frames": true
+    },
+    {
+      "matches": ["https://claude.ai/*"],
+      "js": ["content_scripts/claude_sidebar.js"],
+      "run_at": "document_end",
+      "all_frames": true
     }
   ],
   "permissions": [
     "storage",
-    "declarativeNetRequest"
+    "declarativeNetRequest",
+    "declarativeNetRequestWithHostAccess",
+    "webRequest",
+    "webRequestBlocking"
   ],
   "host_permissions": [
-    "https://chat.deepseek.com/*",
-    "https://claude.ai/*",
-    "https://grok.com/*",
-    "https://gemini.google.com/*",
-    "https://chatgpt.com/*"
+    "<all_urls>"
   ],
   "web_accessible_resources": [
     {
       "resources": ["icons/sites/*.png"],
-      "matches": [
-        "https://claude.ai/*",
-        "https://chat.deepseek.com/*",
-        "https://gemini.google.com/*",
-        "https://grok.com/*",
-        "https://chatgpt.com/*"
-      ]
+      "matches": ["<all_urls>"]
     }
   ],
   "declarative_net_request": {
