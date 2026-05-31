@@ -3,6 +3,7 @@ import { DEFAULT_TABS, faviconFor } from "./defaults.js";
 const STORAGE_KEYS = ["tabs", "activeTabId", "firstRun"];
 const stripEl = document.getElementById("tab-strip");
 const emptyEl = document.getElementById("empty-state");
+const frameEl = document.getElementById("site-frame");
 
 let state = { tabs: [], activeTabId: null };
 
@@ -82,7 +83,7 @@ async function activateTab(id) {
     state.activeTabId = id;
     await browser.storage.local.set({ activeTabId: id });
   }
-  browser.sidebarAction.setPanel({ panel: tab.url });
+  if (frameEl.src !== tab.url) frameEl.src = tab.url;
 }
 
 function resolveInitialActive() {
