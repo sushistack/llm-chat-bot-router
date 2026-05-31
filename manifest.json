@@ -54,6 +54,12 @@
       "all_frames": true
     },
     {
+      "matches": ["https://www.perplexity.ai/*"],
+      "js": ["content_scripts/perplexity_frame_spoof.js"],
+      "run_at": "document_start",
+      "all_frames": true
+    },
+    {
       "matches": ["https://claude.ai/*"],
       "js": ["content_scripts/claude_sidebar.js"],
       "run_at": "document_end",
