@@ -49,12 +49,13 @@ body {
   color: var(--fg-dim);
   border: 1px solid transparent;
   border-radius: 6px;
-  padding: 4px 10px;
+  padding: 4px 8px;
   font: inherit;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 0;
+  flex: 0 0 auto;
 }
 .tab-favicon {
   width: 14px;
@@ -63,11 +64,19 @@ body {
   border-radius: 2px;
   background: var(--bg);
 }
-
-.tab-strip button { flex: 0 0 auto; }
-
-@container (max-width: 420px) {
-  .tab-strip button:not([aria-selected="true"]) span { display: none; }
+.tab-strip button span {
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: max-width 0.2s ease, opacity 0.2s ease, margin-left 0.2s ease;
+  margin-left: 0;
+}
+.tab-strip button:hover span,
+.tab-strip button[aria-selected="true"] span {
+  max-width: 120px;
+  opacity: 1;
+  margin-left: 6px;
 }
 .tab-strip button:hover {
   color: var(--fg);
