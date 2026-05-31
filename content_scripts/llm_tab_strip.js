@@ -69,10 +69,10 @@ function faviconUrlFor(tab) {
       border-color: #4f8cff;
     }
     #llm-router-strip img {
-      width: 14px;
-      height: 14px;
+      width: 18px;
+      height: 18px;
       flex: 0 0 auto;
-      border-radius: 2px;
+      border-radius: 3px;
     }
   `;
   document.head.appendChild(style);

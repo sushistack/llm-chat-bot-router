@@ -58,10 +58,10 @@ body {
   flex: 0 0 auto;
 }
 .tab-favicon {
-  width: 14px;
-  height: 14px;
+  width: 18px;
+  height: 18px;
   flex: 0 0 auto;
-  border-radius: 2px;
+  border-radius: 3px;
   background: var(--bg);
 }
 .tab-strip button span {
@@ -72,7 +72,6 @@ body {
   transition: max-width 0.2s ease, opacity 0.2s ease, margin-left 0.2s ease;
   margin-left: 0;
 }
-.tab-strip button:hover span,
 .tab-strip button[aria-selected="true"] span {
   max-width: 120px;
   opacity: 1;
@@ -88,13 +87,19 @@ body {
   border-color: var(--accent);
 }
 
-.site-frame {
+.frame-container {
   flex: 1 1 auto;
-  border: none;
-  width: 100%;
+  position: relative;
   min-height: 0;
 }
-.site-frame[src=""] { display: none; }
+.site-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+.site-frame.hidden { display: none; }
 
 .empty-state {
   flex: 1 1 auto;

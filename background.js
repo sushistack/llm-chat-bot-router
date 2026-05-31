@@ -25,7 +25,25 @@ browser.declarativeNetRequest.updateDynamicRules({
   console.warn("[llm-router] dynamic rule failed:", e.message);
 });
 
-// ── Approach 2: webRequest blocking as fallback ───────────────────────────────
+// ── Approach 2a: strip Sec-Fetch-* / Referer before sending ──────────────────
+// Cloudflare detects iframe requests via Sec-Fetch-Dest: iframe and moz-extension Referer,
+// then serves a bot-challenge page (cf-mitigated: challenge) which itself has x-frame-options.
+// Stripping these request headers makes the request look like a regular top-level navigation.
+if (browser.webRequest && browser.webRequest.onBeforeSendHeaders) {
+  const STRIP_REQUEST_HEADERS = ["sec-fetch-dest", "sec-fetch-mode", "sec-fetch-site", "sec-fetch-user", "referer"];
+  browser.webRequest.onBeforeSendHeaders.addListener(
+    (details) => {
+      const headers = (details.requestHeaders || []).filter(
+        h => !STRIP_REQUEST_HEADERS.includes(h.name.toLowerCase())
+      );
+      return { requestHeaders: headers };
+    },
+    { urls: ["<all_urls>"], types: ["sub_frame"] },
+    ["blocking", "requestHeaders"]
+  );
+}
+
+// ── Approach 2b: webRequest blocking as fallback ──────────────────────────────
 if (browser.webRequest && browser.webRequest.onHeadersReceived) {
   browser.webRequest.onHeadersReceived.addListener(
     (details) => {

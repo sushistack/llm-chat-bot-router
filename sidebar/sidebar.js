@@ -3,9 +3,10 @@ import { DEFAULT_TABS, faviconFor } from "./defaults.js";
 const STORAGE_KEYS = ["tabs", "activeTabId", "firstRun"];
 const stripEl = document.getElementById("tab-strip");
 const emptyEl = document.getElementById("empty-state");
-const frameEl = document.getElementById("site-frame");
+const containerEl = document.getElementById("frame-container");
 
 let state = { tabs: [], activeTabId: null };
+const frames = new Map(); // tabId → iframe element
 
 function migrateStoredTabs(tabs) {
   const defaults = new Map(DEFAULT_TABS.map(t => [t.id, t]));
@@ -39,14 +40,37 @@ async function loadState() {
   };
 }
 
+function getOrCreateFrame(tab) {
+  if (frames.has(tab.id)) return frames.get(tab.id);
+  const frame = document.createElement("iframe");
+  frame.className = "site-frame hidden";
+  frame.title = tab.label;
+  frame.allowFullscreen = true;
+  containerEl.appendChild(frame);
+  frames.set(tab.id, frame);
+  return frame;
+}
+
+function syncFrames() {
+  const enabled = new Set(state.tabs.filter(t => t.enabled !== false).map(t => t.id));
+  for (const [id, frame] of frames) {
+    if (!enabled.has(id)) {
+      frame.remove();
+      frames.delete(id);
+    }
+  }
+}
+
 function renderStrip() {
   stripEl.replaceChildren();
   const enabled = state.tabs.filter(t => t.enabled !== false);
   if (enabled.length === 0) {
     emptyEl.hidden = false;
+    syncFrames();
     return;
   }
   emptyEl.hidden = true;
+  syncFrames();
   for (const tab of enabled) {
     const btn = document.createElement("button");
     btn.type = "button";
@@ -76,6 +100,7 @@ function renderStrip() {
 async function activateTab(id) {
   const tab = state.tabs.find(t => t.id === id && t.enabled !== false);
   if (!tab) return;
+
   for (const btn of stripEl.querySelectorAll("button")) {
     btn.setAttribute("aria-selected", String(btn.dataset.tabId === id));
   }
@@ -83,7 +108,18 @@ async function activateTab(id) {
     state.activeTabId = id;
     await browser.storage.local.set({ activeTabId: id });
   }
-  if (frameEl.src !== tab.url) frameEl.src = tab.url;
+
+  // show target frame, hide others
+  for (const [tid, frame] of frames) {
+    frame.classList.toggle("hidden", tid !== id);
+  }
+
+  // lazy-load on first activation
+  const frame = getOrCreateFrame(tab);
+  frame.classList.remove("hidden");
+  if (!frame.src || frame.src === "about:blank") {
+    frame.src = tab.url;
+  }
 }
 
 function resolveInitialActive() {

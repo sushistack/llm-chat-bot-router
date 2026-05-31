@@ -21,8 +21,7 @@
         "grok.com",
         "gemini.google.com",
         "chatgpt.com",
-        "www.perplexity.ai",
-        "chat.qwen.ai"
+"chat.qwen.ai"
       ],
       "resourceTypes": ["sub_frame"]
     }

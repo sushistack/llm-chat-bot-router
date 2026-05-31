@@ -3,9 +3,8 @@ export const DEFAULT_TABS = [
   { id: "deepseek",    label: "DeepSeek",    url: "https://chat.deepseek.com",     icon: "icons/sites/deepseek.png",    enabled: true },
   { id: "gemini",      label: "Gemini",      url: "https://gemini.google.com",     icon: "icons/sites/gemini.png",      enabled: true },
   { id: "grok",        label: "Grok",        url: "https://grok.com",              icon: "icons/sites/grok.png",        enabled: true },
-  { id: "chatgpt",     label: "chatGPT",     url: "https://chatgpt.com",           icon: "icons/sites/chatgpt.png",     enabled: true },
-  { id: "perplexity",  label: "Perplexity",  url: "https://www.perplexity.ai",     icon: "icons/sites/perplexity.png",  enabled: true },
-  { id: "qwen",        label: "Qwen",        url: "https://chat.qwen.ai",          icon: "icons/sites/qwen.png",        enabled: true }
+  { id: "chatgpt",     label: "ChatGPT",     url: "https://chatgpt.com",           icon: "icons/sites/chatgpt.png",     enabled: true },
+{ id: "qwen",        label: "Qwen",        url: "https://chat.qwen.ai",          icon: "icons/sites/qwen.png",        enabled: true }
 ];
 
 export function faviconFor(tab) {
