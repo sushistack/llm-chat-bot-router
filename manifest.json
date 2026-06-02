@@ -48,6 +48,7 @@
   ],
   "permissions": [
     "storage",
+    "windows",
     "declarativeNetRequest",
     "declarativeNetRequestWithHostAccess",
     "webRequest",

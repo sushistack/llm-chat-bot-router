@@ -1,11 +1,11 @@
 import { DEFAULT_TABS, faviconFor } from "./defaults.js";
 
-const STORAGE_KEYS = ["tabs", "activeTabId", "firstRun"];
 const stripEl = document.getElementById("tab-strip");
 const emptyEl = document.getElementById("empty-state");
 const containerEl = document.getElementById("frame-container");
 
 let state = { tabs: [], activeTabId: null };
+let activeTabKey = "activeTabId"; // per-window key, set after window ID is known
 const frames = new Map(); // tabId → iframe element
 
 function migrateStoredTabs(tabs) {
@@ -22,11 +22,14 @@ function migrateStoredTabs(tabs) {
 }
 
 async function loadState() {
-  const stored = await browser.storage.local.get(STORAGE_KEYS);
+  const { id: windowId } = await browser.windows.getCurrent();
+  activeTabKey = `activeTabId_w${windowId}`;
+
+  const stored = await browser.storage.local.get(["tabs", "firstRun", activeTabKey]);
   if (stored.firstRun !== false) {
     await browser.storage.local.set({
       tabs: DEFAULT_TABS,
-      activeTabId: DEFAULT_TABS[0].id,
+      [activeTabKey]: DEFAULT_TABS[0].id,
       firstRun: false
     });
     return { tabs: DEFAULT_TABS, activeTabId: DEFAULT_TABS[0].id };
@@ -36,7 +39,7 @@ async function loadState() {
   if (changed) await browser.storage.local.set({ tabs: migrated });
   return {
     tabs: migrated,
-    activeTabId: stored.activeTabId ?? null
+    activeTabId: stored[activeTabKey] ?? null
   };
 }
 
@@ -106,15 +109,13 @@ async function activateTab(id) {
   }
   if (state.activeTabId !== id) {
     state.activeTabId = id;
-    await browser.storage.local.set({ activeTabId: id });
+    await browser.storage.local.set({ [activeTabKey]: id });
   }
 
-  // show target frame, hide others
   for (const [tid, frame] of frames) {
     frame.classList.toggle("hidden", tid !== id);
   }
 
-  // lazy-load on first activation
   const frame = getOrCreateFrame(tab);
   frame.classList.remove("hidden");
   if (!frame.src || frame.src === "about:blank") {
@@ -138,9 +139,9 @@ async function bootstrap() {
 
 browser.storage.onChanged.addListener((changes, area) => {
   if (area !== "local") return;
-  if (!("tabs" in changes) && !("activeTabId" in changes)) return;
-  if ("tabs" in changes) state.tabs = Array.isArray(changes.tabs.newValue) ? changes.tabs.newValue : [];
-  if ("activeTabId" in changes) state.activeTabId = changes.activeTabId.newValue ?? null;
+  // tabs 변경(옵션에서 설정 변경)만 반영, activeTabId 변경은 각 창이 독립적으로 관리
+  if (!("tabs" in changes)) return;
+  state.tabs = Array.isArray(changes.tabs.newValue) ? changes.tabs.newValue : [];
   renderStrip();
   const initial = resolveInitialActive();
   if (initial) activateTab(initial);
