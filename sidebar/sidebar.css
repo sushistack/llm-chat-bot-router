@@ -53,18 +53,19 @@ body {
   appearance: none;
   flex: 0 0 auto;
   background: transparent;
-  color: var(--fg-dim);
   border: 1px solid transparent;
   border-radius: 6px;
   margin: 6px;
-  width: 30px;
-  height: 30px;
-  font-size: 22px;
-  line-height: 1;
+  padding: 4px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+}
+.refresh-icon {
+  width: 18px;
+  height: 18px;
+  display: block;
 }
 .refresh-btn:hover {
   color: var(--fg);
