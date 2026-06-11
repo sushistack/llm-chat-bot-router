@@ -6,7 +6,10 @@
   <link rel="stylesheet" href="sidebar.css">
 </head>
 <body>
-  <nav class="tab-strip" id="tab-strip" aria-label="AI tabs"></nav>
+  <div class="top-bar">
+    <nav class="tab-strip" id="tab-strip" aria-label="AI tabs"></nav>
+    <button type="button" class="refresh-btn" id="refresh-frame" title="새로고침" aria-label="현재 탭 새로고침">⟳</button>
+  </div>
   <section class="empty-state" id="empty-state" hidden>
     <p>No tabs configured.</p>
     <p><a href="#" id="open-options-from-empty">Open options to add one →</a></p>

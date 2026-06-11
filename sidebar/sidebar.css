@@ -32,16 +32,47 @@ body {
   container-type: inline-size;
 }
 
+.top-bar {
+  display: flex;
+  align-items: center;
+  background: var(--bg-elev);
+  border-bottom: 1px solid var(--border);
+  flex: 0 0 auto;
+}
 .tab-strip {
   display: flex;
   flex-wrap: nowrap;
   gap: 4px;
   padding: 6px;
-  background: var(--bg-elev);
-  border-bottom: 1px solid var(--border);
-  flex: 0 0 auto;
+  flex: 1 1 auto;
+  min-width: 0;
   overflow-x: auto;
   scrollbar-width: thin;
+}
+.refresh-btn {
+  appearance: none;
+  flex: 0 0 auto;
+  background: transparent;
+  color: var(--fg-dim);
+  border: 1px solid transparent;
+  border-radius: 6px;
+  margin: 6px;
+  width: 28px;
+  height: 28px;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.refresh-btn:hover {
+  color: var(--fg);
+  background: var(--bg);
+}
+.refresh-btn:active {
+  transform: rotate(180deg);
+  transition: transform 0.2s ease;
 }
 .tab-strip button {
   appearance: none;

@@ -153,6 +153,13 @@ stripEl.addEventListener("wheel", (e) => {
   stripEl.scrollLeft += e.deltaY + e.deltaX;
 }, { passive: false });
 
+document.getElementById("refresh-frame").addEventListener("click", () => {
+  const frame = frames.get(state.activeTabId);
+  if (!frame || !frame.src || frame.src === "about:blank") return;
+  // 교차 출처 iframe은 contentWindow.location.reload()가 막히므로 src 재할당으로 재로드
+  frame.src = frame.src;
+});
+
 document.getElementById("open-options").addEventListener("click", (e) => {
   e.preventDefault();
   browser.runtime.openOptionsPage();
