@@ -8,18 +8,27 @@
 <body>
   <div class="top-bar">
     <nav class="tab-strip" id="tab-strip" aria-label="AI tabs"></nav>
-    <button type="button" class="refresh-btn" id="refresh-frame" title="새로고침" aria-label="현재 탭 새로고침">
-      <img class="refresh-icon" src="../icons/refresh.png" alt="">
-    </button>
+    <div class="menu-wrap">
+      <button type="button" class="menu-btn" id="menu-btn" title="메뉴" aria-label="메뉴">···</button>
+      <ul class="menu-dropdown" id="menu-dropdown" hidden>
+        <li>
+          <button type="button" id="refresh-frame">
+            <img class="menu-icon" src="../icons/refresh.png" alt=""> Refresh
+          </button>
+        </li>
+        <li>
+          <button type="button" id="open-options">
+            <img class="menu-icon" src="../icons/setting.png" alt=""> Settings
+          </button>
+        </li>
+      </ul>
+    </div>
   </div>
   <section class="empty-state" id="empty-state" hidden>
     <p>No tabs configured.</p>
     <p><a href="#" id="open-options-from-empty">Open options to add one →</a></p>
   </section>
   <div id="frame-container" class="frame-container"></div>
-  <footer class="footer">
-    <a href="#" id="open-options">Options</a>
-  </footer>
   <script type="module" src="sidebar.js"></script>
 </body>
 </html>

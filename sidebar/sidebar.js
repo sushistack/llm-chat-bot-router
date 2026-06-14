@@ -153,17 +153,35 @@ stripEl.addEventListener("wheel", (e) => {
   stripEl.scrollLeft += e.deltaY + e.deltaX;
 }, { passive: false });
 
+const menuBtn = document.getElementById("menu-btn");
+const menuDropdown = document.getElementById("menu-dropdown");
+
+menuBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  menuDropdown.hidden = !menuDropdown.hidden;
+});
+
+document.addEventListener("click", () => {
+  menuDropdown.hidden = true;
+});
+
+menuDropdown.addEventListener("click", (e) => {
+  e.stopPropagation();
+});
+
 document.getElementById("refresh-frame").addEventListener("click", () => {
+  menuDropdown.hidden = true;
   const frame = frames.get(state.activeTabId);
   if (!frame || !frame.src || frame.src === "about:blank") return;
   // 교차 출처 iframe은 contentWindow.location.reload()가 막히므로 src 재할당으로 재로드
   frame.src = frame.src;
 });
 
-document.getElementById("open-options").addEventListener("click", (e) => {
-  e.preventDefault();
+document.getElementById("open-options").addEventListener("click", () => {
+  menuDropdown.hidden = true;
   browser.runtime.openOptionsPage();
 });
+
 document.getElementById("open-options-from-empty").addEventListener("click", (e) => {
   e.preventDefault();
   browser.runtime.openOptionsPage();
